@@ -1,0 +1,118 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class Book {
+public:
+    Book(string t, string a) : title(t), author(a) {}
+
+    string getTitle() const {
+        return title;
+    }
+
+    string getAuthor() const {
+        return author;
+    }
+
+private:
+    string title;
+    string author;
+};
+
+class Library {
+public:
+    void addBook(string title, string author) {
+        books.emplace_back(title, author);
+    }
+
+    void removeBook(string title) {
+        for (auto it = books.begin(); it != books.end(); it++) {
+            if (it->getTitle() == title) {
+                books.erase(it);
+                break;
+            }
+        }
+    }
+
+    void displayAllBooks() const {
+        for (const auto& book : books) {
+            cout << book.getTitle() << " by " << book.getAuthor() << endl;
+        }
+    }
+
+    vector<Book> searchByTitle(string title) const {
+        vector<Book> results;
+        for (const auto& book : books) {
+            if (book.getTitle() == title) {
+                results.push_back(book);
+            }
+        }
+        return results;
+    }
+
+    vector<Book> searchByAuthor(string author) const {
+        vector<Book> results;
+        for (const auto& book : books) {
+            if (book.getAuthor() == author) {
+                results.push_back(book);
+            }
+        }
+        return results;
+    }
+
+private:
+    vector<Book> books;
+};
+
+int main() {
+    Library library;
+
+    // Add some books
+    library.addBook("The Great Gatsby", "F. Scott Fitzgerald");
+    library.addBook("To Kill a Mockingbird", "Harper Lee");
+    library.addBook("1984", "George Orwell");
+    library.addBook("Pride and Prejudice", "Jane Austen");
+
+    // Display all books
+    cout << "All books in the library:" << endl;
+    library.displayAllBooks();
+    cout << endl;
+
+    // Search for books by title
+    string title = "1984";
+    cout << "Books with title '" << title << "':" << endl;
+    auto results = library.searchByTitle(title);
+    if (results.empty()) {
+        cout << "No books found." << endl;
+    } else {
+        for (const auto& book : results) {
+            cout << book.getTitle() << " by " << book.getAuthor() << endl;
+        }
+    }
+    cout << endl;
+
+    // Search for books by author
+    string author = "Jane Austen";
+    cout << "Books by author '" << author << "':" << endl;
+    results = library.searchByAuthor(author);
+    if (results.empty()) {
+        cout << "No books found." << endl;
+    } else {
+        for (const auto& book : results) {
+            cout << book.getTitle() << " by " << book.getAuthor() << endl;
+        }
+    }
+    cout << endl;
+
+    // Remove a book
+    title = "The Great Gatsby";
+    cout << "Removing book '" << title << "'..." << endl;
+    library.removeBook(title);
+    cout << endl;
+
+    // Display all books again
+    cout << "All books in the library after removing '" << title << "':" << endl;
+    library.displayAllBooks();
+    cout << endl;
